@@ -6,7 +6,7 @@ Toàn bộ code, dữ liệu, config và test của lab nằm trong thư mục n
 - Cách chạy: `python -m lab8.smoke`, rồi các lệnh ở mục [Các lệnh trong buổi lab](#các-lệnh-trong-buổi-lab).
 - Input: `data/public_claims.jsonl` (claim T01–T14), `data/public_world_state.json` (order, policy, approval), `config/*.yaml` (policy, giá mô phỏng, manifest tool).
 - Output: `reports/benchmark.json`, `reports/crash.json` (commit lên repo), `traces/*.json` và file `*.sqlite` (không commit, đã có trong `.gitignore`).
-- File học viên được sửa: `lab8/shapes/workflow.py`, `lab8/shapes/single.py`, `lab8/shapes/orchestrator.py` (chỗ cần viết đánh dấu `TODO CP2` / `TODO CP3`). Được thêm test mới trong `tests/` và code bonus trong `bonus/`. **Không sửa** `lab8/metrics.py`, `lab8/grade_hidden.py`, `lab8/durability.py`, `lab8/policy.py`, `config/*.yaml`, `data/*`.
+- File học viên được sửa: `lab8/shapes/workflow.py`, `lab8/shapes/single.py`, `lab8/shapes/orchestrator.py` (chỗ cần viết đánh dấu `TODO CP2` / `TODO CP3`). Được thêm test mới trong `tests/` và code bonus trong `bonus/`. **Không sửa** `lab8/metrics.py`, `lab8/durability.py`, `lab8/policy.py`, `config/*.yaml`, `data/*`. Chấm hidden chạy ở grader riêng của giảng viên, chỉ lấy 3 file shape và `bonus/` từ repo nhóm; file khác bị bỏ qua và ghi là tampered.
 
 ## Cấu trúc
 
@@ -112,7 +112,7 @@ Ma trận student lúc mới clone: **186 failed, 62 passed**. 62 test swarm xan
 | Bộ | Ở đâu | Ai chạy | Trong git? |
 | --- | --- | --- | --- |
 | Public T01–T14 | `data/public_claims.jsonl`, `tests/test_public_matrix.py` | Học viên, suốt buổi | Có |
-| Hidden 40 claim × 5 seed | `eval/instructor/` | Giảng viên chấm cuối buổi. Học viên nhận `student_drop/`, không có nhãn | Không (`.gitignore`) |
+| Hidden 40 claim × 5 seed | `eval/instructor/` | Giảng viên chấm cuối buổi bằng grader riêng. Học viên nhận `student_drop/`, không có nhãn | Không (`.gitignore`) |
 
 Bộ hidden phủ: ticket nói dối, injection, approval hỏng hoặc mượn của claim khác, đơn đã được hoàn trước đó, policy hết hiệu lực, cộng dồn sai, đơn hủy / đang giao, homoglyph, principal lẫn, crash và rò secret. Nhãn không nằm trong file học viên nhận. Grader bỏ qua field `expected` gắn trên claim.
 

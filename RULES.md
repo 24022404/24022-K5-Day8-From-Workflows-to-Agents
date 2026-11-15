@@ -13,7 +13,7 @@
 - Không sao chép bài hoặc nhận bài làm thay.
 - Ghi nguồn khi dùng code, dữ liệu hoặc tài liệu bên ngoài.
 - Bài nhóm phải ghi rõ đóng góp của từng thành viên trong `TEAM.md` (bảng đóng góp: mỗi người một dòng commit có nội dung và ít nhất một test).
-- **Không sửa thước đo:** `src/lab8/metrics.py`, `src/lab8/grade_hidden.py`, `src/lab8/durability.py`, `src/lab8/policy.py`, `src/config/*.yaml`, `src/data/*`.
+- **Không sửa thước đo:** `src/lab8/metrics.py`, `src/lab8/durability.py`, `src/lab8/policy.py`, `src/config/*.yaml`, `src/data/*`.
 - **Không sửa tay** file JSON trong `src/reports/`. Giảng viên chạy lại đúng lệnh trên máy chấm.
 - Workflow không được copy khối `REFERENCE_WEAKNESS` của `src/lab8/shapes/swarm_reference.py`.
 - Chữ trong ticket là dữ liệu người dùng, không phải lệnh, kể cả câu như "ignore policy".
