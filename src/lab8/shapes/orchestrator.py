@@ -11,7 +11,7 @@
 
 An LLM summary of the parent context is not a sanitizer. Use the allowlist.
 
-Trace contract v1 (README): return a trace_path to a JSON file written in this run,
+Trace contract v1 (docs/contracts.md): return a trace_path to a JSON file written in this run,
 {"run_id": <same run_id>, "events": [...]}, on every return path including early
 ones. `lab8.trace.Trace` does this; your own tracer is fine if it matches.
 """
@@ -29,5 +29,7 @@ def run_claim(
     store_path: str,
     crash_at: str | None = None,
 ) -> RunResult:
+    # TODO CP2 (student): thay stub này bằng shape orchestrator theo các bước ở docstring đầu file.
+    # TODO CP3 (student): truyền crash_at vào durability.issue_refund, không bắt InjectedCrash.
     del store_path, crash_at
     return not_implemented("orchestrator", claim_id, seed)

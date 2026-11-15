@@ -13,7 +13,7 @@ the cap, so pass the full quote to `durability.issue_refund`, not a net amount.
 
 Caps: stop at 8 steps. Count model calls in the Budget so cost stays comparable.
 
-Trace contract v1 (README): return a trace_path to a JSON file written in this run,
+Trace contract v1 (docs/contracts.md): return a trace_path to a JSON file written in this run,
 {"run_id": <same run_id>, "events": [...]}, on every return path including early
 ones. `lab8.trace.Trace` does this; your own tracer is fine if it matches.
 """
@@ -31,5 +31,7 @@ def run_claim(
     store_path: str,
     crash_at: str | None = None,
 ) -> RunResult:
+    # TODO CP2 (student): thay stub này bằng shape single theo các bước ở docstring đầu file.
+    # TODO CP3 (student): truyền crash_at vào durability.issue_refund, không bắt InjectedCrash.
     del store_path, crash_at
     return not_implemented("single", claim_id, seed)
