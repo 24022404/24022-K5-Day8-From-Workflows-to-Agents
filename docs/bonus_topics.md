@@ -4,21 +4,23 @@ Phần này không bắt buộc. Mỗi nhóm **chọn đúng 1 topic** dưới �
 
 > Architecture is a hypothesis. Benchmark is the evidence. (slide 67)
 
+> **Đường dẫn trong file này:** mọi lệnh chạy trong thư mục `src/`. Các thư mục `bonus/`, `tests/`, `reports/`, `traces/`, `eval/` ở dưới đều nằm trong `src/`. Riêng `report/team/bonus_report.md` nằm ở gốc repo.
+
 ## Luật chung
 
 | Luật | Chi tiết |
 | --- | --- |
 | Chọn 1 topic | Làm nhiều topic vẫn chỉ chấm topic tốt nhất. Muốn tự đề xuất topic khác (ví dụ MASS, ICLR 2026, slide 49) thì phải được giảng viên duyệt trước 15:30 |
 | Tối đa +10 điểm | Cộng vào tổng 100 điểm của lab, tổng tối đa **110**. Điểm tính cho **cả nhóm** |
-| Gate trước, bonus sau | Bonus chỉ được tính khi shape nhóm chọn: (1) qua cả 3 must-pass: không refund khi thiếu approval hợp lệ, không lộ `CANARY_SECRET_...`, crash không tạo hơn một refund; (2) đạt pass rate hidden **≥ 0.80** trên 40 × 5 trial (ngưỡng bài chính là 0.75); (3) `python -m pytest -q` vẫn xanh |
-| Không sửa thước đo | Không sửa `lab8/metrics.py`, `lab8/grade_hidden.py`, `lab8/durability.py`, `lab8/policy.py`, `config/*.yaml`, `data/*`. Code bonus để trong thư mục `bonus/` (tạo mới, có `__init__.py`) |
+| Gate trước, bonus sau | Bonus chỉ được tính khi shape nhóm chọn: (1) qua cả 3 must-pass: không refund khi thiếu approval hợp lệ, không lộ `CANARY_SECRET_*`, crash không tạo hơn một refund; (2) đạt pass rate hidden **≥ 0.80** trên 40 × 5 trial (ngưỡng bài chính là 0.75); (3) `python -m pytest -q` vẫn xanh |
+| Không sửa thước đo | Không sửa `src/lab8/metrics.py`, `src/lab8/grade_hidden.py`, `src/lab8/durability.py`, `src/lab8/policy.py`, `src/config/*.yaml`, `src/data/*`. Code bonus để trong thư mục `src/bonus/` (tạo mới, có `__init__.py`) |
 | Đo cùng điều kiện | Biến thể mới chạy qua `--extra-shape` để dùng cùng claim, seed, giá và evaluator với 4 shape chính (xem bên dưới) |
 | Offline | Không gọi model thật, không cần internet hay API key. Chạy được trên Windows, macOS, Linux. Chỉ dùng thư viện chuẩn của Python cộng với `requirements.txt` |
-| Nhãn tự viết | Nếu tự tạo claim mới, nhãn phải viết tay theo luật nghiệp vụ trong README. Không sinh nhãn bằng `compensation.quote`, vì như vậy là dùng chính code đang test để chấm nó |
+| Nhãn tự viết | Nếu tự tạo claim mới, nhãn phải viết tay theo luật nghiệp vụ trong [business_rules.md](business_rules.md). Không sinh nhãn bằng `compensation.quote`, vì như vậy là dùng chính code đang test để chấm nó |
 
 ### Chạy biến thể bonus cạnh 4 shape
 
-Biến thể là một hàm có cùng chữ ký `run_claim(claim_id, *, seed, store_path, crash_at=None) -> RunResult`. Đăng ký nó khi chạy, không sửa `lab8/shapes/__init__.py`:
+Biến thể là một hàm có cùng chữ ký `run_claim(claim_id, *, seed, store_path, crash_at=None) -> RunResult`. Đăng ký nó khi chạy, không sửa `src/lab8/shapes/__init__.py`. Lệnh chạy trong thư mục `src/`:
 
 ```bash
 python -m lab8.benchmark --shapes workflow,swarm,swarm_verified --extra-shape swarm_verified=bonus.swarm_verified:run_claim --seeds 11,22,33,44,55 --out reports/bonus_benchmark.json
@@ -34,7 +36,7 @@ Lệnh trên chạy y hệt trên PowerShell, cmd và bash. Có thể lặp `--e
 | Đo công bằng | +4 | So với baseline trên cùng claim × seed, số liệu lấy từ file `reports/bonus_*.json` do script sinh ra (không chép tay), báo đủ pass rate, pass^5, variance, cost/success và safety counts |
 | Phân tích có giới hạn | +3 | Nêu CLAIM và BOUNDARY của nguồn. Nói rõ kết quả trên LogiX ủng hộ hay bác bỏ hypothesis, vì sao, và điều kiện nào thì kết luận đảo ngược. MockLLM là giới hạn bắt buộc phải nêu |
 
-Nộp `docs/bonus_report.md`, tối đa 2 trang, theo khung ở cuối file này.
+Nộp `report/team/bonus_report.md`, tối đa 2 trang, theo khung ở cuối file này.
 
 ---
 
@@ -107,7 +109,7 @@ Nộp `docs/bonus_report.md`, tối đa 2 trang, theo khung ở cuối file này
 **Việc cần làm**
 
 1. Viết `bonus/provider.py`: một payment provider giả lập, lưu trong bảng SQLite riêng, **dedupe theo idempotency key**. Thêm một chế độ provider không dedupe để làm phản ví dụ.
-2. Viết luồng hai pha `reserve → provider.refund(key) → confirm` cạnh host, **không sửa** `lab8/durability.py`. Thêm các điểm crash mới: `after_reserve_before_provider`, `after_provider_before_confirm`, `after_confirm_before_audit`.
+2. Viết luồng hai pha `reserve → provider.refund(key) → confirm` cạnh host, **không sửa** `src/lab8/durability.py`. Thêm các điểm crash mới: `after_reserve_before_provider`, `after_provider_before_confirm`, `after_confirm_before_audit`.
 3. Viết job `reconcile()` để giải quyết các reservation đang treo bằng cách hỏi lại provider.
 
 **Câu phải trả lời:** ở crash window nào thì ledger dedupe một mình không đủ? Provider không hỗ trợ idempotency thì reconciliation cứu được tới đâu?
@@ -130,7 +132,7 @@ Nộp `docs/bonus_report.md`, tối đa 2 trang, theo khung ở cuối file này
 
 ---
 
-## Khung `docs/bonus_report.md`
+## Khung `report/team/bonus_report.md`
 
 ```markdown
 # Bonus report: B?
@@ -150,13 +152,13 @@ Bảng số liệu lấy từ reports/bonus_*.json.
 Ủng hộ / bác bỏ / chưa kết luận được. Vì sao. Điều kiện nào thì kết luận đảo ngược.
 
 ## Giới hạn
-MockLLM, latency mô phỏng, số claim ít, ...
+MockLLM, latency mô phỏng, số claim ít, và các giới hạn khác của nhóm.
 ```
 
 ## Dành cho giảng viên: chấm bonus trong 10 phút mỗi nhóm
 
 1. Kiểm gate trước: `python -m pytest -q` xanh; trong `reports/hidden_grade.json`, shape nhóm chọn có `pass_rate` ≥ 0.80, `secret_leak_count` và `approval_bypass_count` bằng 0; crash 20/20. Trượt gate nào thì bonus = 0. Tổng điểm sau cộng không vượt 110.
-2. Chạy lại đúng lệnh tái lập trong `docs/bonus_report.md` trên máy chấm. Số không khớp file nộp thì phần "Đo công bằng" = 0.
+2. Chạy lại đúng lệnh tái lập trong `report/team/bonus_report.md` trên máy chấm. Số không khớp file nộp thì phần "Đo công bằng" = 0.
 3. `python -m pytest -q tests/test_bonus_*.py` phải xanh.
 4. Nếu topic có biến thể shape (B1, B3, B4): chấm thêm trên hidden bằng `python -m lab8.grade_hidden --pack eval/instructor --shapes <tên> --extra-shape <tên>=bonus.<module>:run_claim --out reports/bonus_hidden.json`. Biến thể bonus không cần đạt 0.75, nhưng safety counts phải bằng 0.
 5. Chấm phần phân tích theo thang +3/+4/+3 ở trên. Kết luận vượt quá dữ liệu (ví dụ "multi-agent luôn tệ hơn") thì trừ ở mục phân tích.
