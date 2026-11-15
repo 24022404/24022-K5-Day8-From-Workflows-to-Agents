@@ -1,5 +1,7 @@
 # Research card
 
+File này nằm cố định ở `report/team/research_card.md`; `python -m lab8.check_submission` đọc cột "Nhóm điền" bằng máy.
+
 Phần này nối tiếp phần mini research ở buổi lý thuyết (slide 62–63). Chọn **một** câu R1–R4, điền 6 dòng, rồi biến nó thành **một ablation** chạy được trong lab: giữ nguyên model (MockLLM), tool, seed, corpus và giá, chỉ thay đổi một biến.
 
 | Câu | Nguồn (thư viện tham khảo, slide 68–69) | Câu hỏi gợi ý cho lab |
@@ -30,4 +32,4 @@ Phần này nối tiếp phần mini research ở buổi lý thuyết (slide 62�
 - Kết quả so với hypothesis (đúng / sai / không kết luận được), kèm số liệu:
 - Giới hạn: MockLLM không phải model sản xuất, latency là `unavailable`.
 
-Muốn đi xa hơn một ablation để lấy điểm cộng thì xem `docs/bonus_topics.md`.
+Muốn đi xa hơn một ablation để lấy điểm cộng thì xem [docs/bonus_topics.md](../../docs/bonus_topics.md).
