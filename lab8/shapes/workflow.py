@@ -11,13 +11,20 @@ Suggested steps. Money stays in code (`lab8.tools.compute_compensation`).
 3. `lookup_order`. If not visible -> `escalated`. Do not copy phone, address, item, internal note.
 4. Quote from the order row. Ignore delay numbers written in the ticket.
 5. Quote amount 0 -> `denied`. Do not call issue_refund.
-6. Quote amount > 0 -> `durability.issue_refund`. The host checks approval.
-   Auth failure -> `denied` (the host writes `policy_denied`).
-   Amount conflict -> `failed`.
+6. Quote amount > 0 -> `durability.issue_refund(conn, claim_id, <full quote>)`.
+   Pass the FULL quote. The host checks the claim's own approval and subtracts
+   what earlier claims already got for the same order (T13, T14). Do not
+   subtract it yourself or the host subtracts twice.
+   Auth failure or order already refunded -> `denied` (the host writes `policy_denied`).
+   `proposal_amount` stays the full quote. Amount conflict -> `failed`.
 7. Success -> `resolved`. One ledger row, one `refund_committed` audit.
 8. Use MockLLM only to draft the reply text, if you want a model call at all.
 
 The model must not choose the refund amount and must not commit the refund.
+
+Trace contract v1 (README): return a trace_path to a JSON file written in this run,
+{"run_id": <same run_id>, "events": [...]}, on every return path including early
+ones. `lab8.trace.Trace` does this; your own tracer is fine if it matches.
 """
 
 from __future__ import annotations

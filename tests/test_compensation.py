@@ -1,7 +1,6 @@
 from lab8.compensation import quote
 from lab8.config_loader import as_of
-from lab8.db import load_json, connect, init_store
-from lab8.config_loader import repo_path
+from lab8.db import connect, init_store
 from lab8.tools import get_clause, lookup_policy
 from tests.conftest import CLAIMS, WORLD
 
@@ -60,7 +59,7 @@ def test_quote_ignores_superseded_policy_even_if_passed_in():
 
 def test_get_clause_still_returns_old_clause(tmp_path):
     store = tmp_path / "c.sqlite"
-    init_store(store, WORLD, CLAIMS)
+    init_store(store, WORLD, CLAIMS).close()
     conn = connect(store)
     old = get_clause(conn, "SHIP-LATE-OLD")
     current = lookup_policy(conn)

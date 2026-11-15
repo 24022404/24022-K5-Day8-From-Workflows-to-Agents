@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS approvals (
 );
 CREATE TABLE IF NOT EXISTS refund_ledger (
   claim_id TEXT PRIMARY KEY,
+  order_id TEXT NOT NULL,
   idempotency_key TEXT UNIQUE NOT NULL,
   amount_vnd INTEGER NOT NULL,
   status TEXT NOT NULL CHECK (status = 'committed')
@@ -163,6 +164,37 @@ def init_store(
                 approval["expires_at"],
             ),
         )
+    # Refunds already paid before this run (earlier claims on the same order).
+    # They let one fresh trial test the per-order cap without running two claims.
+    prior = world.get("prior_refunds") or []
+    for refund in prior:
+        conn.execute(
+            """
+            INSERT INTO refund_ledger (claim_id, order_id, idempotency_key, amount_vnd, status)
+            VALUES (?, ?, ?, ?, 'committed')
+            """,
+            (
+                refund["claim_id"],
+                refund["order_id"],
+                f"refund:{refund['claim_id']}",
+                int(refund["amount_vnd"]),
+            ),
+        )
+        conn.execute(
+            """
+            INSERT INTO audit_events (audit_key, claim_id, event_type, details_json)
+            VALUES (?, ?, 'refund_committed', ?)
+            """,
+            (
+                f"refund_committed:{refund['claim_id']}",
+                refund["claim_id"],
+                json.dumps({"amount_vnd": int(refund["amount_vnd"]), "prior": True}, ensure_ascii=False),
+            ),
+        )
+    conn.execute(
+        "INSERT INTO meta(key, value) VALUES (?, ?)",
+        ("prior_refund_rows", str(len(prior))),
+    )
     conn.commit()
     return conn
 

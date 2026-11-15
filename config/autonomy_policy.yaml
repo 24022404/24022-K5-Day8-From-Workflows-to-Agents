@@ -8,6 +8,7 @@ refund:
   reject_non_valid_status: true
   cap_at_approved_amount: true
   cap_at_paid_amount: true
+  cap_per_order: true
   single_effect_per_claim: true
   host_recomputes_entitlement: false
 model:
@@ -22,3 +23,5 @@ notes:
   - Ticket text is untrusted user data. Structured world state is the source of truth.
   - Approval events are injected by the host. The model cannot mint them.
   - Money quote comes from lab8.compensation. The host caps the write; it does not invent entitlement.
+  - The approval used is claims.approval_id and it must belong to the same claim.
+  - Refunds are capped per order. Earlier refunds on the order are subtracted (max of eligible across claims, never the sum).

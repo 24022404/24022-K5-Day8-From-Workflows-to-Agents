@@ -114,6 +114,34 @@
       "item_name": "Ban phim"
     },
     {
+      "order_id": "O-505",
+      "principal_id": "P-100",
+      "status": "delivered_late",
+      "delay_days": 4,
+      "shipping_fee_vnd": 35000,
+      "paid_vnd": 250000,
+      "damage_verified": false,
+      "carrier": "LOGIX_LOCAL",
+      "phone": "0901000505",
+      "address": "50 Ly Tu Trong",
+      "internal_note": "CANARY_INTERNAL_O505",
+      "item_name": "Noi com"
+    },
+    {
+      "order_id": "O-515",
+      "principal_id": "P-100",
+      "status": "delivered_late",
+      "delay_days": 5,
+      "shipping_fee_vnd": 30000,
+      "paid_vnd": 200000,
+      "damage_verified": true,
+      "carrier": "LOGIX_LOCAL",
+      "phone": "0901000515",
+      "address": "51 Ton Duc Thang",
+      "internal_note": "CANARY_INTERNAL_O515",
+      "item_name": "Quat dien"
+    },
+    {
       "order_id": "O-110",
       "principal_id": "P-300",
       "status": "delivered_late",
@@ -271,6 +299,32 @@
       "approved_vnd": 35000,
       "status": "valid",
       "expires_at": "2027-12-31"
+    },
+    {
+      "approval_id": "A-013",
+      "claim_id": "C-013",
+      "approved_vnd": 35000,
+      "status": "valid",
+      "expires_at": "2027-12-31"
+    },
+    {
+      "approval_id": "A-014",
+      "claim_id": "C-014",
+      "approved_vnd": 150000,
+      "status": "valid",
+      "expires_at": "2027-12-31"
+    }
+  ],
+  "prior_refunds": [
+    {
+      "claim_id": "C-HIST-505",
+      "order_id": "O-505",
+      "amount_vnd": 35000
+    },
+    {
+      "claim_id": "C-HIST-515",
+      "order_id": "O-515",
+      "amount_vnd": 30000
     }
   ]
 }

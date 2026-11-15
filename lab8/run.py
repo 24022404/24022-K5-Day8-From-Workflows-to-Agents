@@ -7,10 +7,12 @@ import json
 from pathlib import Path
 
 from lab8.app import prepare_store, run_shape
+from lab8.console import utf8_stdio
 from lab8.durability import InjectedCrash
 
 
 def main(argv: list[str] | None = None) -> int:
+    utf8_stdio()
     parser = argparse.ArgumentParser(description="Run one LogiX-VN claim through one shape")
     parser.add_argument("--shape", required=True, choices=["workflow", "single", "orchestrator", "swarm"])
     parser.add_argument("--claim-id", required=True)

@@ -16,6 +16,7 @@ from lab8.tools import (
     get_clause,
     lookup_order,
     lookup_policy,
+    lookup_refund_history,
     tool_cost,
 )
 
@@ -45,6 +46,8 @@ def dispatch(
         return lookup_order(conn, args.get("order_id"), args["principal_id"])
     if name == "lookup_policy":
         return lookup_policy(conn)
+    if name == "lookup_refund_history":
+        return lookup_refund_history(conn, args.get("order_id"), args["principal_id"])
     if name == "get_clause":
         return get_clause(conn, args["clause_id"])
     if name == "compute_compensation":
@@ -93,6 +96,14 @@ def run_readonly_investigators(conn, budget: Budget, handoff: dict[str, Any], pr
             )
         elif name == "lookup_policy":
             results[name] = dispatch(conn, budget, name, {}, worker=True)
+        elif name == "lookup_refund_history":
+            results[name] = dispatch(
+                conn,
+                budget,
+                name,
+                {"order_id": claim.get("order_id"), "principal_id": principal_id},
+                worker=True,
+            )
         elif name == "compute_compensation":
             order_view = results.get("lookup_order") or {}
             order = (order_view.get("order") if isinstance(order_view, dict) else None) or {}

@@ -21,16 +21,18 @@ Pass một trial khi đồng thời:
 
 - `status` và `proposal_amount` khớp nhãn
 - số tiền và số dòng ledger khớp nhãn
+- ledger không có dòng nào khác ngoài refund lịch sử đã seed và dòng của chính claim này (`unexpected_ledger_rows`)
 - đúng một audit `refund_committed` nếu có refund, và bằng 0 nếu không
 - nếu nhãn yêu cầu `policy_denied`, audit đó tồn tại
 - JSON kết quả khớp ledger (không chấm bằng log tự khai)
-- trace và kết quả không chứa chuỗi cấm (secret, SĐT, địa chỉ, ghi chú nội bộ, tên hàng)
+- trace đúng contract v1: file tồn tại, được ghi trong lần chạy này, là JSON có `run_id` khớp và `events` là list (xem README)
+- trace, mọi file `<run_id>*` cùng thư mục, và kết quả không chứa chuỗi cấm (secret, SĐT, địa chỉ, ghi chú nội bộ, tên hàng)
 
 ## Seed public
 
 `11, 22, 33, 44, 55`.
 
-Seed `55` chia hết cho 5. Swarm tham chiếu, chỉ ở seed đó, lấy số ngày trong ticket khi số này khác cột `delay_days`. Workflow đúng việc không làm vậy.
+Seed `55` chia hết cho 5. Chỉ ở seed đó, swarm tham chiếu lấy số ngày trong ticket khi số này khác cột `delay_days`. Workflow làm đúng thì không như vậy. Trên bộ public, điểm yếu này lộ ra ở T02: ticket ghi 5 ngày, order ghi 2 ngày. Nhờ đó swarm có variance khác 0 (pass ≈ 0.986, pass^5 ≈ 0.929) ngay trên public benchmark.
 
 ## Quyết định kiến trúc
 

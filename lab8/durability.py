@@ -4,6 +4,10 @@ A checkpoint does not make a side effect exactly-once. The refund row and the
 refund_committed audit share one SQLite transaction. Retry after a crash is a
 no-op when the claim already has a committed effect. A different amount on
 retry is a conflict: the committed amount stays.
+
+Refunds are also capped per order: other claims on the same order are
+subtracted (see lab8.policy). The order total is re-read inside the write
+transaction, so two claims for one order cannot both pay in full.
 """
 
 from __future__ import annotations
@@ -12,7 +16,7 @@ import json
 import sqlite3
 from typing import Any
 
-from lab8.policy import authorize
+from lab8.policy import authorize, order_refunded_vnd
 
 
 class InjectedCrash(Exception):
@@ -65,8 +69,13 @@ def issue_refund(
     proposed_vnd: int,
     *,
     crash_at: str | None = None,
+    _retry: bool = True,
 ) -> dict[str, Any]:
-    """Commit at most one refund for this claim. Model input cannot skip the gate."""
+    """Commit at most one refund for this claim. Model input cannot skip the gate.
+
+    proposed_vnd is the full entitlement quote for the order (compute_compensation).
+    The host subtracts what other claims already received for that order.
+    """
     claim = conn.execute("SELECT * FROM claims WHERE claim_id = ?", (claim_id,)).fetchone()
     if claim is None:
         return {"ok": False, "reason": "unknown_claim", "effect": None, "conflict": False}
@@ -82,7 +91,14 @@ def issue_refund(
         record_policy_denied(conn, claim_id, "outside_principal_scope")
         return {"ok": False, "reason": "outside_principal_scope", "effect": None, "conflict": False}
 
-    decision = authorize(conn, claim_id, proposed_vnd, paid_vnd=int(order["paid_vnd"]))
+    already = order_refunded_vnd(conn, claim["order_id"], exclude_claim_id=claim_id)
+    decision = authorize(
+        conn,
+        claim_id,
+        proposed_vnd,
+        paid_vnd=int(order["paid_vnd"]),
+        already_refunded_vnd=already,
+    )
     if not decision.ok:
         record_policy_denied(conn, claim_id, decision.reason)
         return {"ok": False, "reason": decision.reason, "effect": None, "conflict": False}
@@ -102,12 +118,19 @@ def issue_refund(
     key = idempotency_key(claim_id)
     try:
         conn.execute("BEGIN IMMEDIATE")
+        # Another claim on the same order may have committed since we read the total.
+        if order_refunded_vnd(conn, claim["order_id"], exclude_claim_id=claim_id) != already:
+            conn.rollback()
+            if _retry:
+                return issue_refund(conn, claim_id, proposed_vnd, crash_at=crash_at, _retry=False)
+            record_policy_denied(conn, claim_id, "order_total_changed")
+            return {"ok": False, "reason": "order_total_changed", "effect": None, "conflict": False}
         conn.execute(
             """
-            INSERT INTO refund_ledger (claim_id, idempotency_key, amount_vnd, status)
-            VALUES (?, ?, ?, 'committed')
+            INSERT INTO refund_ledger (claim_id, order_id, idempotency_key, amount_vnd, status)
+            VALUES (?, ?, ?, ?, 'committed')
             """,
-            (claim_id, key, amount),
+            (claim_id, claim["order_id"], key, amount),
         )
         conn.execute(
             """

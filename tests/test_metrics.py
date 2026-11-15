@@ -22,6 +22,8 @@ def test_pass5_and_population_variance_and_cost():
     assert stats["pass_5"] == 0.5
     assert stats["seed_min"] == 0.5
     assert stats["seed_max"] == 1.0
+    # seed rates 1.0 and 0.5, mean 0.75 -> population variance 0.0625 (sample variance would be 0.125)
+    assert stats["seed_variance"] == 0.0625
     assert stats["cost_per_success_vnd"] == 40 / 3
     assert stats["latency"] == "unavailable"
     assert stats["cost_note"] == "simulated_not_real_api_price"

@@ -20,6 +20,7 @@ READONLY_TOOLS = {
     "get_claim_view",
     "lookup_order",
     "lookup_policy",
+    "lookup_refund_history",
     "get_clause",
     "compute_compensation",
 }

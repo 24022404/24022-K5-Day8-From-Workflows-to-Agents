@@ -58,7 +58,24 @@ def test_four_shapes_share_one_signature():
     assert set(SHAPES) == {"workflow", "single", "orchestrator", "swarm"}
 
 
-def test_public_matrix_has_twelve_labeled_cases():
+def test_public_matrix_has_fourteen_labeled_cases():
     rows = (repo_path("data", "public_claims.jsonl")).read_text(encoding="utf-8").strip().splitlines()
     ids = [json.loads(line)["matrix_id"] for line in rows]
-    assert ids == [f"T{i:02d}" for i in range(1, 13)]
+    assert ids == [f"T{i:02d}" for i in range(1, 15)]
+
+
+def test_extra_shape_registers_for_one_process_only():
+    import pytest
+
+    from lab8.app import register_extra_shapes
+
+    try:
+        assert register_extra_shapes(["swarm_copy=lab8.shapes.swarm_reference:run_claim"]) == ["swarm_copy"]
+        assert SHAPES["swarm_copy"] is SHAPES["swarm"]
+        with pytest.raises(SystemExit):
+            register_extra_shapes(["swarm=lab8.shapes.swarm_reference:run_claim"])
+        with pytest.raises(SystemExit):
+            register_extra_shapes(["no_colon=lab8.shapes.swarm_reference"])
+    finally:
+        SHAPES.pop("swarm_copy", None)
+    assert set(SHAPES) == {"workflow", "single", "orchestrator", "swarm"}

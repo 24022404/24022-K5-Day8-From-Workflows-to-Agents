@@ -29,6 +29,8 @@ flowchart LR
 | Lọc theo principal, policy hiệu lực, trần tiền | Code |
 | Đọc ticket mơ hồ, có nên hỏi thêm không | Model, trong bound |
 | Approval, idempotency, ghi refund | Code, một transaction |
+| Trần hoàn tiền theo đơn (trừ phần claim trước đã nhận) | Code, đọc lại tổng trong cùng transaction ghi |
+| Approval có thuộc đúng claim không | Code (`claims.approval_id` → `approvals.claim_id`) |
 | Duyệt hay không | Approval event do host gắn, không do model tạo |
 | Retry sau crash | Ledger, không phải checkpoint đơn độc |
 

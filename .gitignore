@@ -5,6 +5,8 @@ __pycache__/
 *.sqlite
 *.sqlite-*
 traces/
-reports/*.json
+reports/hidden_grade.json
+reports/bonus_hidden.json
 eval/instructor/
 .DS_Store
+student_drop/

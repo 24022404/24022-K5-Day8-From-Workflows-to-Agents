@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 from pathlib import Path
 from typing import Any
 
@@ -24,7 +25,26 @@ def prepare_store(
     claims = load_jsonl(claims_path)
     if extra_claims:
         claims = claims + extra_claims
-    init_store(store_path, world, claims)
+    init_store(store_path, world, claims).close()
+
+
+def register_extra_shapes(specs: list[str]) -> list[str]:
+    """Register bonus variants for this process only: ["name=package.module:function", ...].
+
+    The four official shapes stay fixed in lab8.shapes.SHAPES. Extra names are added
+    at runtime so a variant runs under the same claims, seeds, prices, and evaluator.
+    """
+    names = []
+    for spec in specs:
+        name, sep, target = spec.partition("=")
+        module_name, colon, func_name = target.partition(":")
+        if not (sep and colon and name and module_name and func_name):
+            raise SystemExit(f"--extra-shape expects name=package.module:function, got {spec!r}")
+        if name in SHAPES:
+            raise SystemExit(f"--extra-shape name {name!r} already exists")
+        SHAPES[name] = getattr(importlib.import_module(module_name), func_name)
+        names.append(name)
+    return names
 
 
 def run_shape(

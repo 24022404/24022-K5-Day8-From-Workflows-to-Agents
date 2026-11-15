@@ -15,5 +15,5 @@ BY_ID = {row["claim_id"]: row for row in CLAIMS}
 @pytest.fixture
 def public_db(tmp_path: Path) -> Path:
     store = tmp_path / "public.sqlite"
-    init_store(store, WORLD, CLAIMS)
+    init_store(store, WORLD, CLAIMS).close()
     return store

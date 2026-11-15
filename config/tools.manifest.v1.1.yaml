@@ -12,6 +12,10 @@ tools:
     mutates: false
     host_only: false
     description: Current policy only (is_current and effective_date <= as_of).
+  - name: lookup_refund_history
+    mutates: false
+    host_only: false
+    description: Total already refunded for an order the principal owns, across all claims. No other claim text or ids.
   - name: get_clause
     mutates: false
     host_only: false

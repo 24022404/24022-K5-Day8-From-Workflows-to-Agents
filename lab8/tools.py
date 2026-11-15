@@ -51,6 +51,28 @@ def lookup_order(
     return {"visible": True, "reason": "ok", "order": order}
 
 
+def lookup_refund_history(
+    conn: sqlite3.Connection,
+    order_id: str | None,
+    principal_id: str,
+) -> dict[str, Any]:
+    """How much this order has already been refunded, by any claim. Same scope rules as lookup_order."""
+    scope = lookup_order(conn, order_id, principal_id)
+    if not scope["visible"]:
+        return {"visible": False, "reason": scope["reason"]}
+    row = conn.execute(
+        "SELECT COUNT(*) AS n, COALESCE(SUM(amount_vnd), 0) AS total FROM refund_ledger WHERE order_id = ?",
+        (order_id,),
+    ).fetchone()
+    return {
+        "visible": True,
+        "reason": "ok",
+        "order_id": order_id,
+        "refund_count": int(row["n"]),
+        "refunded_vnd": int(row["total"]),
+    }
+
+
 def lookup_policy(conn: sqlite3.Connection) -> dict[str, Any]:
     today = as_of()
     rows = conn.execute(

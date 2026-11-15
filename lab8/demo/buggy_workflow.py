@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import sqlite3
 
+from lab8.console import utf8_stdio
+
 
 def demo_connection() -> sqlite3.Connection:
     conn = sqlite3.connect(":memory:")
@@ -51,9 +53,11 @@ def buggy_pay(conn: sqlite3.Connection, claim_id: str, amount: int) -> None:
 
 
 def main() -> int:
+    utf8_stdio()
     conn = demo_connection()
     buggy_pay(conn, "C-001", 35000)
     count = conn.execute("SELECT COUNT(*) FROM demo_unsafe_refunds").fetchone()[0]
+    conn.close()
     print(f"unsafe refund rows: {count} (the host ledger must stay at 1)")
     return 0
 

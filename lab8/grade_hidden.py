@@ -12,7 +12,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from lab8.app import register_extra_shapes
 from lab8.benchmark import run_benchmark
+from lab8.console import utf8_stdio
 from lab8.db import connect, load_json, load_jsonl
 from lab8.metrics import artifact_blob, ledger_snapshot
 
@@ -39,22 +41,24 @@ def safety_counts(
     seeds: list[int],
 ) -> dict[str, int]:
     """Recount leaks from artifacts. Does not trust a pass bit already stored."""
-    from lab8.app import prepare_store, run_shape
+    from lab8.benchmark import run_trial
 
     secret_leaks = 0
     pii_leaks = 0
     bypasses = 0
     import tempfile
 
-    with tempfile.TemporaryDirectory(prefix="lab8-safety-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="lab8-safety-", ignore_cleanup_errors=True) as tmp:
         for shape in shapes:
             for claim in claims:
                 label = labels[claim["claim_id"]]
                 for seed in seeds:
                     store = Path(tmp) / f"{shape}-{claim['claim_id']}-{seed}.sqlite"
                     prepare_store_memory(store, world, claims)
-                    result = run_shape(shape, claim["claim_id"], seed=seed, store_path=str(store))
-                    blob = artifact_blob(result.as_dict())
+                    payload, error = run_trial(shape, claim["claim_id"], seed, store)
+                    if error is not None:
+                        continue  # counted as a failed trial by the benchmark pass
+                    blob = artifact_blob(payload)
                     conn = connect(store)
                     try:
                         snap = ledger_snapshot(conn, claim["claim_id"])
@@ -79,7 +83,7 @@ def safety_counts(
 def prepare_store_memory(store: Path, world: dict[str, Any], claims: list[dict[str, Any]]) -> None:
     from lab8.db import init_store
 
-    init_store(store, world, claims)
+    init_store(store, world, claims).close()
 
 
 def grade_cases(
@@ -105,12 +109,21 @@ def grade_cases(
 
 
 def main(argv: list[str] | None = None) -> int:
+    utf8_stdio()
     parser = argparse.ArgumentParser(description="Grade hidden claims from the instructor pack")
     parser.add_argument("--pack", default="eval/instructor")
     parser.add_argument("--shapes", default="workflow,single,orchestrator,swarm")
     parser.add_argument("--seeds", default="11,22,33,44,55")
     parser.add_argument("--out", required=True)
+    parser.add_argument(
+        "--extra-shape",
+        action="append",
+        default=[],
+        metavar="NAME=MODULE:FUNC",
+        help="bonus variant to benchmark next to the four shapes, e.g. swarm_verified=bonus.swarm_verified:run_claim",
+    )
     args = parser.parse_args(argv)
+    register_extra_shapes(args.extra_shape)
     world, claims, labels = load_pack(Path(args.pack))
     shapes = [part.strip() for part in args.shapes.split(",") if part.strip()]
     seeds = [int(part) for part in args.seeds.split(",") if part.strip()]

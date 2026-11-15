@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from lab8.app import prepare_store
+from lab8.console import utf8_stdio
 from lab8.db import connect
 from lab8.durability import InjectedCrash, committed_audit_count, get_refund, issue_refund
 
@@ -152,6 +153,7 @@ def _fail(index: int, point: str, reason: str) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
+    utf8_stdio()
     parser = argparse.ArgumentParser(description="Run the 20-point crash lab")
     parser.add_argument("--count", type=int, default=20)
     parser.add_argument("--out", required=True)
@@ -160,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("this lab defines exactly 20 crash points")
     import tempfile
 
-    with tempfile.TemporaryDirectory(prefix="lab8-crash-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="lab8-crash-", ignore_cleanup_errors=True) as tmp:
         report = run_suite(Path(tmp))
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
