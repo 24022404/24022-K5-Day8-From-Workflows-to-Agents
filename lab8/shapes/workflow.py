@@ -1,0 +1,37 @@
+"""Shape A — deterministic workflow. Student work.
+
+Signature (do not change):
+
+    run_claim(claim_id, *, seed, store_path, crash_at=None) -> RunResult
+
+Suggested steps. Money stays in code (`lab8.tools.compute_compensation`).
+
+1. Open the store. Read the claim through `get_claim_view` (not SELECT *).
+2. Missing order_id -> status `needs_info`. Do not write the ledger.
+3. `lookup_order`. If not visible -> `escalated`. Do not copy phone, address, item, internal note.
+4. Quote from the order row. Ignore delay numbers written in the ticket.
+5. Quote amount 0 -> `denied`. Do not call issue_refund.
+6. Quote amount > 0 -> `durability.issue_refund`. The host checks approval.
+   Auth failure -> `denied` (the host writes `policy_denied`).
+   Amount conflict -> `failed`.
+7. Success -> `resolved`. One ledger row, one `refund_committed` audit.
+8. Use MockLLM only to draft the reply text, if you want a model call at all.
+
+The model must not choose the refund amount and must not commit the refund.
+"""
+
+from __future__ import annotations
+
+from lab8.schemas import RunResult
+from lab8.shapes.common import not_implemented
+
+
+def run_claim(
+    claim_id: str,
+    *,
+    seed: int,
+    store_path: str,
+    crash_at: str | None = None,
+) -> RunResult:
+    del store_path, crash_at
+    return not_implemented("workflow", claim_id, seed)

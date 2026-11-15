@@ -1,0 +1,27 @@
+"""Shape C — orchestrator plus read-only investigators. Student work.
+
+1. Build a handoff with `lab8.handoff.make_handoff`. Allowed tools are read-only.
+   Never put parent_secret, raw headers, or the full claim row into facts.
+2. `lab8.runtime.run_readonly_investigators` runs those tools.
+3. The orchestrator quotes from the investigator's order view and calls
+   `durability.issue_refund`. Investigators have no write registry.
+4. Trace the sanitized handoff, not the parent context.
+
+An LLM summary of the parent context is not a sanitizer. Use the allowlist.
+"""
+
+from __future__ import annotations
+
+from lab8.schemas import RunResult
+from lab8.shapes.common import not_implemented
+
+
+def run_claim(
+    claim_id: str,
+    *,
+    seed: int,
+    store_path: str,
+    crash_at: str | None = None,
+) -> RunResult:
+    del store_path, crash_at
+    return not_implemented("orchestrator", claim_id, seed)
