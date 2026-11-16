@@ -2,7 +2,7 @@
 
 ## Loại bài
 
-**Nhóm.** Nhóm push bài lên GitHub; mỗi thành viên tự nộp cùng link repo nhóm trên LMS bằng tài khoản cá nhân.
+**Nhóm.** Nhóm push bài lên GitHub; mỗi thành viên tự nộp cùng link repo nhóm trên LMS bằng tài khoản cá nhân. Ai không nộp link thì không có điểm, dù nhóm đã nộp.
 
 ## Tên repo và biến tên
 
@@ -16,7 +16,7 @@ K5-L3A-DAY08-TenNhom-FromWorkflowsToAgents
 K5-L3B-DAY08-TenNhom-FromWorkflowsToAgents
 ```
 
-`TenNhom` viết không dấu, không khoảng trắng.
+`TenNhom` viết không dấu, không khoảng trắng. Repo phải public, hoặc đã mời giảng viên vào.
 
 ### Tạo repo nhóm
 
