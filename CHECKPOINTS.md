@@ -1,6 +1,6 @@
 # Checkpoints
 
-Năm checkpoint bám theo lịch buổi lab 13:30–17:30 (nghỉ 15:15–15:30). Giờ ghi kèm là mốc tại lớp, không phải deadline nộp bài. Mọi lệnh chạy trong thư mục `src/`.
+Năm checkpoint bám theo lịch buổi lab 13:30–17:30 (nghỉ 15:15–15:30). Giờ ghi kèm là mốc tại lớp, không phải deadline nộp bài. Lớp học buổi sáng đi cùng thứ tự và thời lượng từng checkpoint; giờ cụ thể theo coach thông báo. Mọi lệnh chạy trong thư mục `src/`.
 
 ## CP1 — Cài đặt, đọc contract, chia vai (13:30, M0)
 
@@ -37,7 +37,7 @@ Năm checkpoint bám theo lịch buổi lab 13:30–17:30 (nghỉ 15:15–15:30)
 ## CP5 — Benchmark, hidden, quyết định kiến trúc (16:15, M4 → 17:00)
 
 - **Mục tiêu:** chọn shape bằng số đo trên cùng claim, cùng seed, cùng bảng giá, và nộp được bài mà grader đọc được.
-- **Cần làm:** chạy benchmark 4 shape × 5 seed trên bộ public; sau 16:15 tự kiểm trên `student_drop/` ([src/README.md](src/README.md#tự-kiểm-trên-bộ-hidden-sau-1615)); điền `report/team/decision_adr.md` (shape chọn, commit hash, run id, số liệu) và `report/team/research_card.md`; viết `report/team/group_report.md`, bảng đóng góp trong `TEAM.md` và báo cáo từng thành viên.
+- **Cần làm:** chạy benchmark 4 shape × 5 seed trên bộ public; sau 16:15 tự kiểm trên `student_drop/` ([src/README.md](src/README.md#tự-kiểm-trên-bộ-hidden-cp5)); điền `report/team/decision_adr.md` (shape chọn, commit hash, run id, số liệu) và `report/team/research_card.md`; viết `report/team/group_report.md`, bảng đóng góp trong `TEAM.md` và báo cáo từng thành viên.
 - **Sản phẩm:** `src/reports/benchmark.json` (4 shape, ≥ 10 claim, seed `11,22,33,44,55`), ADR và research card đã điền, báo cáo nhóm và cá nhân.
 - **Cần hiểu:** pass rate, pass^5, seed variance, cost/success ([docs/metrics.md](docs/metrics.md)); vì sao swarm fail T02 ở seed 55; điều kiện nào làm quyết định kiến trúc đảo lại.
 - **Tự kiểm tra:** `python -m lab8.benchmark --shapes workflow,single,orchestrator,swarm --cases data/public_claims.jsonl --seeds 11,22,33,44,55 --out reports/benchmark.json` chạy xong; `python -m lab8.check_submission` ra `0 FAIL`.

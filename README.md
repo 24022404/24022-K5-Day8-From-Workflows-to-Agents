@@ -2,7 +2,7 @@
 
 AI20K K5, ngày 8. Nhóm xử lý claim hoàn phí vận chuyển của công ty giả lập LogiX-VN bằng **bốn kiến trúc** (workflow, single agent, orchestrator, swarm), rồi dựa trên số đo để chọn kiến trúc **ít tự chủ nhất mà vẫn làm được việc**. Dữ liệu là dữ liệu giả. Không cần GPU, API key hay internet trong giờ lab; chạy được trên Windows, macOS và Linux.
 
-**Loại bài:** Nhóm · **Thời lượng:** 4 giờ tại lớp (13:30–17:30) · **Deadline:** xem [SUBMISSION.md](SUBMISSION.md#deadline-gmt7)
+**Loại bài:** Nhóm · **Thời lượng:** 4 giờ tại lớp (13:30–17:30) · **Deadline:** lớp sáng 23h59 GMT+7 ngày lab; lớp chiều/tối 11h59 GMT+7 ngày hôm sau ([SUBMISSION.md](SUBMISSION.md#deadline-gmt7))
 
 ## Mục tiêu học tập
 
@@ -95,7 +95,7 @@ Smoke đúng in ra `lab8.smoke pass`. `python -m pytest -q` (cổng host) phải
 
 Khi cần:
 
-- [src/README.md](src/README.md): cài đặt chi tiết, bảng lệnh, file được sửa, tự kiểm trên bộ hidden sau 16:15.
+- [src/README.md](src/README.md): cài đặt chi tiết, bảng lệnh, file được sửa, tự kiểm trên bộ hidden ở CP5.
 - [RULES.md](RULES.md): dùng AI, liêm chính, file không được sửa, nộp muộn.
 - [RUBRIC.md](RUBRIC.md): 100 điểm chính, must-pass, bonus ghi riêng.
 - [SUBMISSION.md](SUBMISSION.md): tên repo, deliverable, deadline, checklist. Đọc trước khi nộp.
