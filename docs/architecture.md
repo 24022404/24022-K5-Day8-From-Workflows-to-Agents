@@ -1,6 +1,6 @@
 # Architecture
 
-Điền trong buổi lab. Giữ tối đa phần này gọn; báo cáo cả nhóm không quá 5 trang ngoài phụ lục.
+Tài liệu tham khảo về bốn shape và ranh giới code / model. Nhóm mô tả kiến trúc **của mình** ở mục 3 "Giải pháp" trong [`report/team/group_report.md`](../report/team/group_report.md). Báo cáo cả nhóm không quá 5 trang ngoài phụ lục.
 
 ## Bốn shape
 
